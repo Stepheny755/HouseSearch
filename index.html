@@ -1,0 +1,226 @@
+<div id="map"></div>
+<div class="wrapper">
+  <div class="inputField">
+    <h1>House Search</h1>
+    <h4>Enter the addresses of some of your favourite locations, and give them an importance rank!</h4>
+    <form>
+      <div class="inputHolder">
+        <input id="workplaceAddressInput" type="text" placeholder="Work Address">
+          <select id="workplaceRankInput" class="workplace">
+            <option value="disabled" disabled selected>Rank</option>
+            <option value = "1">1</option>
+            <option value = "2">2</option>
+            <option value = "3">3</option>
+            <option value = "4">4</option>
+            <option value = "5">5</option>
+          </select>
+          <br>
+      </div>
+      <div class="inputHolder">
+        <input id="schoolAddressInput" type="text" placeholder="School Address">
+          <select id="schoolRankInput" class="school">
+            <option value="disabled" disabled selected>Rank</option>
+            <option value = "1">1</option>
+            <option value = "2">2</option>
+            <option value = "3">3</option>
+            <option value = "4">4</option>
+            <option value = "5">5</option>
+          </select>
+          <br>
+      </div>
+      <div class="inputHolder">
+        <input id="Data_Input" type="text" placeholder="Custom Option 3">
+          <select id="Rank_Input" class="Data_Type">
+            <option value="disabled" disabled selected>Rank</option>
+            <option value = "1">1</option>
+            <option value = "2">2</option>
+            <option value = "3">3</option>
+            <option value = "4">4</option>
+            <option value = "5">5</option>
+          </select>
+          <br>
+      </div>
+      <div class="inputHolder">
+        <input id="Data_Input" type="text" placeholder="Custom Option 4">
+          <select id="Rank_Input" class="Data_Type">
+            <option value="disabled" disabled selected>Rank</option>
+            <option value = "1">1</option>
+            <option value = "2">2</option>
+            <option value = "3">3</option>
+            <option value = "4">4</option>
+            <option value = "5">5</option>
+          </select>
+          <br>
+      </div>
+      <div class="inputHolder">
+        <input id="Data_Input" type="text" placeholder="Custom Option 5">
+          <select id="Rank_Input" class="Data_Type">
+            <option value="disabled" disabled selected>Rank</option>
+            <option value = "1">1</option>
+            <option value = "2">2</option>
+            <option value = "3">3</option>
+            <option value = "4">4</option>
+            <option value = "5">5</option>
+          </select>
+          <br>
+      </div>
+      <div class="inputHolder">
+        <select id="maximumPriceDropdown" class="prices">
+          <option value="disabled" disabled selected>Select your maximum price</option>
+          <option value = "100000">$100,000</option>
+          <option value = "200000">$200,000</option>
+          <option value = "300000">$300,000</option>
+          <option value = "400000">$400,000</option>
+          <option value = "500000">$500,000</option>
+        </select>
+      </div>
+    </form>
+    <button onclick="submitData()" class="submitButton">Submit</button>
+  </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+
+<script>
+  function submitData(){
+    var workplaceAddress = document.getElementById('workplaceAddressInput');
+    var workplaceRank = document.getElementById('workplaceRankInput');
+    var schoolAddress = document.getElementById('schoolAddressInput');
+    var schoolRank = document.getElementById('schoolRankInput');
+    var maxPrice = document.getElementById('maximumPriceDropdown');
+
+    if(workplaceAddress.value == '' && schoolAddress.value == ''){
+      alert("ERROR: Fill in either Work or School, or both!");
+    }
+    else{
+      $(document).ready(function(){
+        $.post( "http://138.197.162.192:8080/postmethod", {
+          data: JSON.stringify({'workAddress':workplaceAddress.value,'workRank':workplaceRank.value,'schoolAddress':schoolAddress.value,'schoolRank':schoolRank.value,'maxPrice':maxPrice.value})
+        });
+    });
+    setTimeout(function () {
+          loadMap();
+      }, 3000);
+    }
+  }
+    function initialize() {
+      var inputWork = document.getElementById('workplaceAddressInput');
+      var inputSchool = document.getElementById('schoolAddressInput');
+      new google.maps.places.Autocomplete(inputSchool);
+      new google.maps.places.Autocomplete(inputWork);
+    }
+
+
+    function loadMap(){
+      var myLatLng = {lat: 39.985055, lng: -83.08739};
+
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 8,
+        center: myLatLng,
+        disableDefaultUI: true
+      });
+
+      var contentString = '<div id="content">'+
+            '<div id="siteNotice">'+
+            '</div>'+
+            '<h1 id="firstHeading" class="firstHeading">Uluru</h1>'+
+            '<div id="bodyContent">'+
+            '<img src="https://s3.amazonaws.com/rets-rabbit-bucket-stage/033989e234259a07740c81eb66fd3263/27947_Photo_0.jpg" style="width:500px;height:300px;">'+
+            '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
+            'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
+            '(last visited June 22, 2009).</p>'+
+            '</div>'+
+            '</div>';
+        var infowindow = new google.maps.InfoWindow({
+            content: contentString
+          });
+
+
+      var marker = new google.maps.Marker({
+        position: myLatLng,
+        map: map,
+      });
+      marker.addListener('click', function() {
+                infowindow.open(map, marker);
+              });
+      document.getElementById("map").style.display = "block";
+    }
+
+</script>
+
+<script>
+
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAY_O-f8qn8c0CzyYdQPvbTruOsVMk0InA&libraries=places&callback=initialize"></script>
+
+<style>
+  body {
+    background-color: #8e44ad;
+  }
+  .inputField {
+    background-color: #f2f2f2;
+    padding: 20px;
+    width: 30%;
+    box-shadow: 2px 6px 20px 2px rgba(0, 0, 0, 0.5);
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .inputHolder {
+    padding: 5px;
+  }
+  .submitButton {
+    background-color: #8e44ad;
+    border: none;
+    color: white;
+    font-size: 20px;
+    float: center;
+    width: 95%;
+    padding: 5px;
+    margin-top: 10px;
+    margin-top 10px;
+  }
+  select {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: white;
+    margin: 7px;
+    color: grey;
+  }
+  input[type=text] {
+    width: 85%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+  h1 {
+    color: grey;
+    margin-left: 10px;
+  }
+  .prices {
+    width: 95%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 0;
+  }
+  h4 {
+    color: grey;
+    margin-left: 10px;
+  }
+  .wrapper {
+    padding-top: 10%;
+    padding-bottom: 10%;
+  }
+  #map {
+    height: 100%;
+    display: none;
+  }
+  html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  }
+</style>
