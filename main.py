@@ -1,16 +1,15 @@
 import json,requests
 from flask import Flask,request
 
-app = Flask('main')
+#app = Flask('main')
 
 from req import Req
 from map import Map
 from search import Search
 
-@app.route('/sendmethod')
-def main(city,rank,params,min,max):
+#@app.route('/sendmethod')
+def main(city,params,rank,min,max):
     d = Search()
-    #params=['Mount Carmel West','Dodge Rec Center','University of British Columbia']
     d.setRanking(rank)
     templist=d.search(city,params,min,max)
     hid=d.bestHouseCandidate(templist)
@@ -25,7 +24,7 @@ def main(city,rank,params,min,max):
     f=open('data.json','w+')
     f.write(json.dumps(data))
 
-@app.route('/postmethod', methods = ['POST'])
+#@app.route('/postmethod', methods = ['POST'])
 def post_javascript_data():
     jsdata = request.form['data']
     print(jsdata)
@@ -48,12 +47,12 @@ def post_javascript_data():
     min = 0
     max = json.loads(jsdata)['maxPrice']
 
-    r = requests.post('http://138.197.162.192/front',{'data':'test'})
+    #r = requests.post('http://138.197.162.192/front',{'data':'test'})
 
     main(city,rst,lst,min,max)
 
     return "OK"
 
-#main('a',['Dodge Rec Center'],0,100000)
+main('a',['Dodge Rec Center','Mount Carmel West Hospital'],[2,1],0,100000)
 
-Flask.run(app,host="0.0.0.0",port=8080)
+#Flask.run(app,host="0.0.0.0",port=8080)
